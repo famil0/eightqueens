@@ -1,0 +1,144 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: grid;
+    place-items: center;
+    height: 100dvh;
+}
+
+:root {
+    --cell-size: calc(min(100vh, 120vw) / 11);
+}
+
+.container {
+    width: max-content;
+}
+
+.menu {
+    display: grid;
+    grid-template-columns: repeat(8, var(--cell-size));
+    grid-template-rows: var(--cell-size);
+    padding: 5px;
+}
+
+.boardcontainer {
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    border: 5px solid;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 40px 0;
+}
+
+.row, .waitrow {
+    display: flex;
+}
+
+.row:last-child {
+    border-top: 5px solid;
+}
+
+.cell, .wait {
+    width: var(--cell-size);
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+}
+
+.queen:after, .wait::after {
+    content: '';
+    width: 90%;
+    aspect-ratio: 1 / 1;
+    background-image: url(queen.svg);
+}
+
+.wait:not(.queen)::after {
+    opacity: .15;
+}
+
+.row:nth-child(odd) .cell:nth-child(odd),
+.row:nth-child(even) .cell:nth-child(even) {
+    background-color: rgb(255, 251, 231);
+}
+
+.row:nth-child(odd) .cell:nth-child(even),
+.row:nth-child(even) .cell:nth-child(odd) {
+    background-color: rgb(100, 100, 100);
+}
+
+
+.start.btn {
+    height: var(--cell-size);
+    aspect-ratio: 1 / 1;
+    background-image: url(start.svg);
+    border-radius: 50%;
+    cursor: pointer;
+    grid-column-start: 8;
+}
+
+.disabled {
+    opacity: .15;
+    cursor: not-allowed;
+}
+
+.checkbox {
+    /* grid-column-end: 7; */
+    width: calc(3 * var(--cell-size) );
+    /* width: fit-content; */
+    border-radius: 50px;
+    overflow: hidden;
+    transition: .3s;
+    position: relative;
+}
+
+.ms {
+    width: calc(3 * var(--cell-size) - 10px);
+    height: calc(100% - 10px);
+    border-radius: 50px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    text-align: center;
+    border: 5px solid;
+    transition: .3s;
+    z-index: -1;
+}
+
+.ms > div {
+    display: grid;
+    align-items: center;
+    font-size: 1.5rem;
+    grid-column-start: 2;
+    width: 100%;
+    height: 100%;
+    outline: 0;
+}
+
+#cbwait:checked + label + .ms {
+    transform: translateX(-100%);
+}
+
+.ms div:empty::before {
+    content: '42';
+    font-style: italic;
+    color: grey;
+}
+
+.checkbox label {
+    cursor: pointer;
+    /* translate: -5px -5px; */
+    aspect-ratio: 1 / 1;
+    /* height: 100%; */
+    width: calc(var(--cell-size));
+    background-image: url(clock.svg);
+    position: absolute;
+    /* display: block; */
+    z-index: 1;
+}
+
+.checkbox input {
+    display: none;
+}
