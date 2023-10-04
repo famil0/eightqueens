@@ -37,6 +37,7 @@ startBtn.addEventListener('click', () => {
         backtrack();
     }
 });
+
 const waitCheckbox = document.querySelector('#cbwait');
 const milliseconds = document.querySelector('.ms').children[0];
 const queensNumber = document.querySelector('.queensnumber').children[0];
@@ -51,13 +52,20 @@ function toggle(element) {
 }
 
 let board = [];
-let rows = document.querySelectorAll('.row');
+let cells = document.querySelectorAll('.cell');
+for (let i = 0; i < cells.length; i++) {
+    let a = i % 8 + 1;
+    let b = Math.floor(i / 8) + 1;
+    cells[i].style.gridColumnStart = a;
+    cells[i].style.gridRowStart = b;
+}
+
 let n = parseInt(queensNumber.innerHTML);
 let queens = [];
+let end = false;
 newBoard();
 
 let queenIdx = 0;
-let end = false;
 let foundSolutions = 0;
 async function backtrack() {
     running = true;
@@ -116,6 +124,9 @@ function goodPosition(i, j) {
 }
 
 function newBoard() {
+    running = false;
+    end = false;
+    startBtn.classList.remove('disabled');
     document.querySelector(':root').style.setProperty('--N', n);
     if (queens.length > 0) {
         queens.forEach(q => {
@@ -126,7 +137,7 @@ function newBoard() {
     for (let i = 8 - n; i <= 8; i++) {
         board[i - (8 - n)] = [];
         for (let j = 0; j < n; j++) {
-            board[i - (8 - n)][j] = rows[i].children[j];
+            board[i - (8 - n)][j] = cells[i*8+j];
         }
     }
     queens = [];
