@@ -63,14 +63,17 @@ for (let i = 0; i < cells.length; i++) {
 let n = parseInt(queensNumber.innerHTML);
 let queens = [];
 let end = false;
-newBoard();
-
+let findAllSolution = false;
 let queenIdx = 0;
+
+newBoard();
 let foundSolutions = 0;
 async function backtrack() {
+    let solutions = [];
+
     running = true;
     while (!end) {
-        if (!waitCheckbox.checked && milliseconds.innerHTML != "0" && milliseconds.innerHTML != "") {
+        if (!findAllSolution && !waitCheckbox.checked && milliseconds.innerHTML != "0" && milliseconds.innerHTML != "") {
             await new Promise(res => setTimeout(res, parseInt(milliseconds.innerHTML)));
         }
         let queen = queens[queenIdx];
@@ -82,16 +85,27 @@ async function backtrack() {
         else if (goodPosition(queen.i, queen.j)) {
             queenIdx++;
             if (queenIdx == n) {
-                end = true;
+                if (!findAllSolution) {
+                    end = true;
+                }
+                else {
+                    queenIdx--;
+                }
                 foundSolutions++;
+                let s = '';
+                queens.forEach(q => {
+                    s += q.i;
+                });
+                solutions.push(s);
             }
         }
         if (queens[0].i == n && queens[n - 1].i == n) {
-            break;
+            end = true;
         }
     }
     running = false;
     toggle(startBtn);
+    return solutions;
 }
 
 
@@ -141,6 +155,7 @@ function newBoard() {
         }
     }
     queens = [];
+    queenIdx = 0;
     for (let i = 0; i < n; i++) {
         queens[i] = new Queen(n, i);
         queens[i].placeOrRemove();
@@ -151,3 +166,32 @@ function placeOrRemoveQueen(i, j) {
     if (i < 0) return;
      board[i][j].classList.toggle('queen');
 }
+
+async function createAndDownloadFile() {
+    let textToWrite = '';
+    const fileName = `${n}x${n}`;
+
+    newBoard();
+    toggle(startBtn);
+    findAllSolution = true;
+
+    let solutions = await backtrack();
+    solutions.forEach(sol => {
+        textToWrite += `${sol}\n`;
+    });
+
+    findAllSolution = false;
+
+  
+    const blob = new Blob([textToWrite], { type: 'text/plain' });
+  
+    const blobUrl = window.URL.createObjectURL(blob);
+  
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = fileName;
+  
+    a.click();
+  
+    window.URL.revokeObjectURL(blobUrl);
+  }

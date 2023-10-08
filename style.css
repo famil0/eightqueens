@@ -95,13 +95,27 @@ body {
     border-top: 5px solid;
 }
 
-.start.btn {
-    height: var(--cell-size);
-    aspect-ratio: 1 / 1;
-    background-image: url(start.svg);
-    border-radius: 50%;
+.btn {
     cursor: pointer;
+}
+
+.start {
+    background-image: url(start.svg);
     grid-column-start: 8;
+}
+
+.solutions {
+    background-image: url(file.svg);
+    background-position: center;
+    background-size: 50%;
+    grid-column-start: 5;
+    background-repeat: no-repeat;
+    border: 5px solid;
+    border-radius: 50%;
+}
+
+.solutions:hover {
+    background-image: url(file-download.svg);
 }
 
 .disabled {
